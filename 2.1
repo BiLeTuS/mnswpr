@@ -47,15 +47,29 @@
 #::::::::::::::::..::::::::::::^^!JYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ
 
 #  A_B_C_D_E_F_G_H_I
-#1|0 0 0 1 @ 1 0 0 0 
-#2|1 2 1 2 1 2 1 1 0 
-#3|! 3 ! 2 0 1 @ 1 0 
-#4|1 3 ! 3 1 2 1 1 0 
-#5|0 1 1 2 @ 1 0 0 0 
-#6|0 0 1 2 3 2 1 0 0 
-#7|0 1 2 @ 2 @ 2 1 1 
-#8|0 1 @ 2 2 1 2 @ 1 
-#9|0 1 1 1 0 0 1 1 1 
+#1|      1 @ 1  
+#2|1 2 1 2 1 2 1 1   
+#3|! 3 ! 2   1 @ 1   
+#4|1 3 ! 3 1 2 1 1   
+#5|  1 1 2 @ 1       
+#6|    1 2 3 2 1     
+#7|  1 2 @ 2 @ 2 1 1 
+#8|  1 @ 2 2 1 2 @ 1 
+#9|  1 1 1     1 1 1 
+
+
+def out_red(text):
+    return("\033[31m{}" .format(text) + "\033[37m")
+def out_green(text):
+    return("\033[32m{}" .format(text) + "\033[37m")
+def out_blue(text):
+    return("\033[34m{}" .format(text) + "\033[37m")
+def out_purple(text):
+    return("\033[35m{}" .format(text) + "\033[37m")
+def out_black(text):
+    return("\033[30m{}" .format(text) + "\033[37m")
+
+
 
 import random as r
 
@@ -66,7 +80,7 @@ rar = []
 enrar = []
 for i in range (9):
     rar.append([])
-for i in range (9):
+for i in range (11):
     enrar.append([])
  
  
@@ -83,38 +97,32 @@ def show():
     for i in range (len(rar)):
         print(i+1, end = '|')
         for ii in range (len(rar[i])):
-            print(rar[i][ii], end=' ')
+            if rar[i][ii] == 0:
+                print(' ', end = ' ')
+            else:
+                print(rar[i][ii], end=' ')
         print()
+
+def openzero():
+    x = 0
+    global rar
+    global enrar
+    global Ox
+    global Ooy
+    if enrar[Ox][Ooy] == 0:
+        rar[Ox][Ooy] = 0
+    else:
+        return(0)
+    
 
 
 while genn < 10:
-    X = r.randrange(0,8)
-    Y = r.randrange(0,8)
+    X = r.randrange(1,9)
+    Y = r.randrange(1,9)
     if enrar[X][Y]!='*':
         enrar[X][Y]='*'
         genn += 1
-def numchanger():
-    global Ooy
-    if Ooy == 'A':
-        Ooy = 0
-    elif Ooy == 'B':
-        Ooy = 1
-    elif Ooy == 'C':
-        Ooy = 2
-    elif Ooy == 'D':
-        Ooy = 3
-    elif Ooy == 'E':
-        Ooy = 4
-    elif Ooy == 'F':
-        Ooy = 5
-    elif Ooy == 'G':
-        Ooy = 6
-    elif Ooy == 'H':
-        Ooy = 7
-    elif Ooy == 'I':
-        Ooy = 8
-
-                
+        
 for Ox in range (len(enrar)):
     for Oy in range (len(enrar)):
         if enrar[Ox][Oy] == '*':
@@ -143,8 +151,33 @@ for Ox in range (len(enrar)):
                 if enrar[Ox][Oy+1] != '*':
                     enrar[Ox][Oy+1] = (enrar[Ox][Oy+1])+1
 
-show()
+unrar = enrar
+
+def numchanger():
+    global Ooy
+    if Ooy == 'A':
+        Ooy = 0
+    elif Ooy == 'B':
+        Ooy = 1
+    elif Ooy == 'C':
+        Ooy = 2
+    elif Ooy == 'D':
+        Ooy = 3
+    elif Ooy == 'E':
+        Ooy = 4
+    elif Ooy == 'F':
+        Ooy = 5
+    elif Ooy == 'G':
+        Ooy = 6
+    elif Ooy == 'H':
+        Ooy = 7
+    elif Ooy == 'I':
+        Ooy = 8
+
+                
+
 def choose():
+    global Ox
     global Ooy
     global x
     global rar
@@ -152,41 +185,70 @@ def choose():
     for i in range (1):
         print('===================')
         print('/f - Поставить флаг (/f E2)')
+        print('/r - Убрать флаг (/r E2)')
         OXY = str(input('Введите координаты точки в формате "E2": '))
         #Oy = str(input('Введите букву столбца: '))
         #Ox = int(input('Введите номер строчки: '))-1
-        if len(OXY)> 2:
+        if len(OXY) != 2 and len(OXY) != 0:
             if OXY[0] == '/':
+#                 if OXY[1] == 'r':
+#                     Ooy = OXY[3]
+#                     numchanger()
+#                     Ox = int(OXY[4])-1
+#                     enrar[Ox][Ooy] = unrar[Ox][Ooy]
+#                     rar[Ox][Ooy] = '?'
+                    
                 if OXY[1] == 'f':
                     Ooy = OXY[3]
                     numchanger()
                     Ox = int(OXY[4])-1
                     if enrar[Ox][Ooy] == '*':
-                        enrar[Ox][Ooy] = 'P'
-                        rar[Ox][Ooy] = 'P'
+                        enrar[Ox][Ooy] = '\033[33m' + 'P' + "\033[37m"
+                        rar[Ox][Ooy] = '\033[33m' + 'P' + "\033[37m"
+                        return(0)
                     else:
                         enrar[Ox][Ooy] = '!'
-                        rar[Ox][Ooy] = 'P'
-                    show()
+                        rar[Ox][Ooy] =  '\033[33m' + 'P' + "\033[37m"
+                        return(0)
             else:
                 print('Error!')
                 return(0)
-        else:
+        elif len(OXY) == 2:
+            print('1')
+            print(enrar[Ox][Ooy])
+            print(unrar[Ox][Ooy])
             Ooy = OXY[0]
             Ox = int(OXY[1])-1
             numchanger()
             if enrar[Ox][Ooy] != '!':
-                rar[Ox][Ooy] = enrar[Ox][Ooy]
+                if enrar[Ox][Ooy] == 0:
+                    openzero()
+                if enrar[Ox][Ooy] == 1:
+                    rar[Ox][Ooy] = out_blue(enrar[Ox][Ooy])
+                elif enrar[Ox][Ooy] == 2:
+                    rar[Ox][Ooy] = out_green(enrar[Ox][Ooy])
+                elif enrar[Ox][Ooy] == 3:
+                    rar[Ox][Ooy] = out_red(enrar[Ox][Ooy])
+                elif enrar[Ox][Ooy] == 4:
+                    rar[Ox][Ooy] = out_purple(enrar[Ox][Ooy])
+                elif enrar[Ox][Ooy] == 5:
+                    rar[Ox][Ooy] = out_black(enrar[Ox][Ooy])
+                else:
+                    rar[Ox][Ooy] = (enrar[Ox][Ooy])
             if enrar[Ox][Ooy] == '*':
                 x = 2
                 show()
                 print('===Вы проиграли!===')
+                
             else:
-                show()
-        
+                return(0)
+        else:
+            print('Error!')
+            return(0)
         
         
 while x == 1:
+    show()
     choose()
     
     
